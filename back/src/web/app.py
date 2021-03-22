@@ -88,4 +88,9 @@ def points_get(id):
 def assigned_users_get(id):
     return json_response(user_interactor.get_all_assigned_users()), 200
 
-# def user_update_put():
+
+@app.route("/api/users/<user_id>/goals/<date>", methods=["GET"])
+def goals_by_date_and_user_id_get(user_id, date):
+    goals = goal_interactor.get_goals_by_date_and_assigned_user_id(
+        date, user_id)
+    return json_response(goals), 200

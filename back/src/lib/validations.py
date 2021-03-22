@@ -39,6 +39,13 @@ def validate_iso8601_timestamp(timestamp):
         raise BadRequestError({"timestamp": "BAD FORMAT"})
 
 
+def validate_date_format(date):
+    regex = r"^(([1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
+    match = re.compile(regex).match(date)
+    if match is None:
+        raise BadRequestError({"date": "BAD FORMAT"})
+
+
 def validate_user_authentication(user):
     if user is None:
         errors = {"msg": "This operation is not authorized. Please, log in."}

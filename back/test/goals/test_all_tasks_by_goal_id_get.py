@@ -5,7 +5,7 @@ from src.lib.errors import NotAuthorizedError, NotFoundError
 import pytest
 
 
-def test_should_get_an_empty_list_if_there_is_no_data_but_exists_the_goal_and_the_user_is_logged(database):
+def test_should_get_an_empty_list_if_there_is_no_data_but_the_goal_exists_and_the_user_is_logged_in(database):
     database.executescript(
         """
         INSERT INTO goals VALUES
@@ -27,7 +27,7 @@ def test_should_get_an_empty_list_if_there_is_no_data_but_exists_the_goal_and_th
     assert all_tasks == []
 
 
-def test_should_get_all_tasks_if_there_is_data_and_the_goal_exists_and_the_user_is_logged(database):
+def test_should_get_all_tasks_if_there_is_data_and_the_goal_exists_and_the_user_is_logged_in(database):
     database.executescript(
         """
         INSERT INTO goals VALUES
@@ -87,7 +87,7 @@ def test_should_raise_NotFoundError_if_the_goal_doesnt_exist_and_the_user_is_log
     }
 
 
-def test_should_get_NotAuthorizedError_if_the_user_is_not_logged(database):
+def test_should_get_NotAuthorizedError_if_the_user_is_not_logged_in(database):
     database.executescript(
         """
         INSERT INTO goals VALUES

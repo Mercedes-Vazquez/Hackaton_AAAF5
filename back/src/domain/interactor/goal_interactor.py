@@ -1,5 +1,5 @@
 from src.domain.repository.goal_repository import GoalRepository
-from src.lib.validations import validate_user_authentication
+from src.lib.validations import validate_user_authentication, validate_admin_role, validate_date_format
 from src.lib.errors import NotFoundError
 from datetime import datetime
 
@@ -25,8 +25,37 @@ class GoalInteractor:
             goal_id)
         return all_tasks
 
+    def get_goals_by_date_and_assigned_user_id(self, date, user_id):
+        current_user = self.user_repository.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        validate_date_format(date)
+        self._validate_user(user_id)
+        self._validate_user_assignment(user_id, current_user.id)
+        all_goals = self.goal_repository.get_all_goals_by_user_id(
+            user_id)
+        result = []
+        for goal in all_goals:
+            if goal.date == date:
+                result.append(goal)
+        return result
+
     def _validate_goal_id(self, goal_id):
         goal = self.goal_repository.get_goal_by_id(goal_id)
         if goal is None:
             errors = {"msg": f"Goal with id '{goal_id}' not found."}
+            raise NotFoundError(errors)
+
+    def _validate_user(self, user_id):
+        user = self.user_repository.get_by_id(user_id)
+        if user is None:
+            errors = {"msg": f"User with id '{user_id}' not found."}
+            raise NotFoundError(errors)
+
+    def _validate_user_assignment(self, user_id, admin_id):
+        assigned_users = self.user_repository.get_all_assigned_users_by_admin_id(
+            admin_id)
+        assigned_users_ids = [user.id for user in assigned_users]
+        if user_id not in assigned_users_ids:
+            errors = {"msg": f"User with id '{user_id}' not found."}
             raise NotFoundError(errors)
