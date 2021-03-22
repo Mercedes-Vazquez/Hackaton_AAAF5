@@ -1,6 +1,7 @@
 from src.lib.errors import NotAuthorizedError
 from src.lib.validations import validate_user_authentication, validate_required_fields, validate_iso8601_timestamp, validate_admin_role
 from src.domain.model.log import Log
+from src.domain.model.user import User, hash_password
 
 
 class UserInteractor:
@@ -16,6 +17,15 @@ class UserInteractor:
             raise NotAuthorizedError({"msg": "Bad username or password"})
 
         return user
+
+    def register_user(self, data):
+        validate_required_fields(data, ["id", "username", "name", "password"])
+        current_user = self.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        new_user = User(data["id"], data["username"],
+                        data["name"], hash_password(data["password"]), is_admin=False)
+        self.user_repository.save_user(new_user, current_user)
 
     def get_current_user(self):
         return self.user_repository.get_current_user()

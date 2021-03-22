@@ -30,6 +30,13 @@ def auth_login():
     return json_response({"access_token": access_token, "user": user})
 
 
+@app.route("/api/auth/register", methods=["POST"])
+def auth_register():
+    data = request.get_json()
+    user_interactor.register_user(data)
+    return "", 200
+
+
 @app.route("/api/goals", methods=["GET"])
 def all_goals_get():
     return json_response(goal_interactor.get_current_users_daily_goals()), 200
@@ -57,5 +64,7 @@ def points_get(id):
 
 
 @app.route("/api/users", methods=["GET"])
-def points_get(id):
+def assigned_users_get(id):
     return json_response(user_interactor.get_all_assigned_users()), 200
+
+# def user_update_put():

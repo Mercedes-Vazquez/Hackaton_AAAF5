@@ -60,3 +60,18 @@ class UserRepository(SqliteBasedRepository):
             "SELECT * FROM admin_users WHERE admin_id = ?;", (admin_id,))
         assigned_users_ids = [record["user_id"] for record in cursor.fetchall()]
         return [self.get_by_id(id) for id in assigned_users_ids]
+
+    def save_user(self, user, admin):
+        cursor = self._conn().cursor()
+        cursor.execute("INSERT OR REPLACE INTO users VALUES (:id, :username, :name, :password, :is_admin)", {
+            "id": user.id,
+            "username": user.username,
+            "name": user.name,
+            "password": user.password,
+            "is_admin": 1 if user.is_admin else 0
+        })
+        cursor.execute("INSERT OR REPLACE INTO admin_users VALUES (:admin_id, :user_id)", {
+            "admin_id": admin.id,
+            "user_id": user.id
+        })
+        self._conn().commit()
