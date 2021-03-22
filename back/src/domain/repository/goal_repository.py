@@ -48,3 +48,17 @@ class GoalRepository(SqliteBasedRepository):
             "user_id": goal.user_id,
         })
         self._conn().commit()
+
+    def save_assigned_users_task(self, task):
+        cursor = self._conn().cursor()
+        cursor.execute("""
+            INSERT OR REPLACE INTO tasks 
+            VALUES (:id, :title, :description, :hint, :goal_id)
+        """, {
+            "id": task.id,
+            "title": task.title,
+            "description": task.description,
+            "hint": task.hint,
+            "goal_id": task.goal_id,
+        })
+        self._conn().commit()

@@ -62,14 +62,14 @@ def test_should_raise_NotFoundError_if_the_goal_doesnt_exist_and_the_user_or_the
     database.executescript(
         """
         INSERT INTO goals VALUES
-        ("test-id-1", "test-date", "test-title", "test-category", 1, "user-1"),
-        ("test-id-2", "test-date", "test-title", "test-category", 1, "user-1"),
-        ("test-id-3", "test-date", "test-title", "test-category", 1, "user-1"),
-        ("test-id-4", "test-date", "test-title", "test-category", 1, "user-2");
+        ("test-goal-id-1", "test-date", "test-title", "test-category", 1, "user-1"),
+        ("test-goal-id-2", "test-date", "test-title", "test-category", 1, "user-1"),
+        ("test-goal-id-3", "test-date", "test-title", "test-category", 1, "user-1"),
+        ("test-goal-id-4", "test-date", "test-title", "test-category", 1, "user-2");
 
         INSERT INTO tasks VALUES
-        ("test-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
-        ("test-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
+        ("test-task-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
+        ("test-task-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
         """
     )
     user_repository = UserRepository(
@@ -91,14 +91,14 @@ def test_should_get_NotAuthorizedError_if_the_user_or_the_admin_are_not_logged_i
     database.executescript(
         """
         INSERT INTO goals VALUES
-        ("test-id-1", "test-date", "test-title", "test-category", 1, "user-1"),
-        ("test-id-2", "test-date", "test-title", "test-category", 1, "user-1"),
-        ("test-id-3", "test-date", "test-title", "test-category", 1, "user-1"),
-        ("test-id-4", "test-date", "test-title", "test-category", 1, "user-2");
+        ("test-goal-id-1", "test-date", "test-title", "test-category", 1, "user-1"),
+        ("test-goal-id-2", "test-date", "test-title", "test-category", 1, "user-1"),
+        ("test-goal-id-3", "test-date", "test-title", "test-category", 1, "user-1"),
+        ("test-goal-id-4", "test-date", "test-title", "test-category", 1, "user-2");
 
         INSERT INTO tasks VALUES
-        ("test-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
-        ("test-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
+        ("test-task-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
+        ("test-task-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
         """
     )
     user_repository = UserRepository(
@@ -126,8 +126,8 @@ def test_should_get_NotAuthorizedError_if_goal_doesnt_belong_to_the_logged_user(
         ("test-goal-id-4", "test-date", "test-title", "test-category", 1, "user-2");
 
         INSERT INTO tasks VALUES
-        ("test-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
-        ("test-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
+        ("test-task-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
+        ("test-task-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
         """
     )
     user_repository = UserRepository(
@@ -155,8 +155,8 @@ def test_should_get_NotAuthorizedError_if_goal_doesnt_belong_to_an_assigned_user
         ("test-goal-id-4", "test-date", "test-title", "test-category", 1, "user-2");
 
         INSERT INTO tasks VALUES
-        ("test-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
-        ("test-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
+        ("test-task-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
+        ("test-task-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
         """
     )
     user_repository = UserRepository(

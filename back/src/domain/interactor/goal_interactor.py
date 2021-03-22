@@ -1,5 +1,6 @@
 from src.domain.repository.goal_repository import GoalRepository
 from src.domain.model.goal import Goal
+from src.domain.model.task import Task
 from src.lib.validations import \
     validate_required_fields, validate_required_range_of_values, \
     validate_user_authentication, validate_admin_role, validate_date_format
@@ -59,6 +60,18 @@ class GoalInteractor:
                     data["category"], data["status"], data["user_id"])
         self.goal_repository.save_assigned_users_goal(goal)
 
+    def save_assigned_users_task(self, data):
+        current_user = self.user_repository.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        validate_required_fields(
+            data, ["id", "title", "description", "hint", "goal_id"])
+        self._validate_goal_id(data["goal_id"])
+        self._validate_goal_access(data["goal_id"], current_user)
+        task = Task(data["id"], data["title"], data["description"],
+                    data["hint"], data["goal_id"])
+        self.goal_repository.save_assigned_users_task(task)
+
     def _validate_goal_id(self, goal_id):
         goal = self.goal_repository.get_goal_by_id(goal_id)
         if goal is None:
@@ -79,11 +92,11 @@ class GoalInteractor:
             errors = {"msg": "This operation is not authorized."}
             raise NotAuthorizedError(errors)
 
-    def _validate_goal_access(self, goal_id, current_user):
+    def _validate_goal_access(self, goal_id, user):
         goal = self.goal_repository.get_goal_by_id(goal_id)
-        if not current_user.is_admin:
-            if goal.user_id != current_user.id:
+        if not user.is_admin:
+            if goal.user_id != user.id:
                 errors = {"msg": "This operation is not authorized."}
                 raise NotAuthorizedError(errors)
         else:
-            self._validate_user_assignment(goal.user_id, current_user.id)
+            self._validate_user_assignment(goal.user_id, user.id)
