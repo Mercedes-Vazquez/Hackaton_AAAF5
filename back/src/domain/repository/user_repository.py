@@ -1,4 +1,5 @@
 from src.domain.model.user import User
+from src.domain.model.log import Log
 from src.lib.sqlite_based_repository import SqliteBasedRepository
 
 
@@ -29,3 +30,17 @@ class UserRepository(SqliteBasedRepository):
 
         if data is not None:
             return create_user_from_record(data)
+
+    def get_log_by_user_id(self, user_id):
+        cursor = self._conn().cursor()
+        cursor.execute("SELECT * FROM log where user_id = ?;", (user_id,))
+        result = []
+        added_dates = []
+        for record in cursor.fetchall():
+            date = record["timestamp"][0:10]
+            if date not in added_dates:
+                log = Log(timestamp=record["timestamp"],
+                          user_id=record["user_id"])
+                result.append(log)
+                added_dates.append(date)
+        return result

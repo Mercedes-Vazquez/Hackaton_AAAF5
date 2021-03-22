@@ -39,6 +39,13 @@ def database():
             FOREIGN KEY ("goal_id") REFERENCES goals("goal_id")
         );
 
+        DROP TABLE IF EXISTS log;
+        CREATE TABLE IF NOT EXISTS log (
+            timestamp varchar,
+            user_id varchar,
+            FOREIGN KEY ("user_id") REFERENCES users("user_id")
+        );
+
         INSERT INTO users (id, username, name, password, is_admin) values 
             ("user-1", "user-1@example.com", "User 1", '{hash_password("user-1-password")}', 1),
             ("user-2", "user-2@example.com", "User 2", '{hash_password("user-2-password")}', 0),
