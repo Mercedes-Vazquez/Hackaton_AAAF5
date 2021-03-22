@@ -39,8 +39,8 @@ def database():
             FOREIGN KEY ("goal_id") REFERENCES goals("goal_id")
         );
 
-        DROP TABLE IF EXISTS log;
-        CREATE TABLE IF NOT EXISTS log (
+        DROP TABLE IF EXISTS logs;
+        CREATE TABLE IF NOT EXISTS logs (
             timestamp varchar,
             user_id varchar,
             FOREIGN KEY ("user_id") REFERENCES users("user_id")

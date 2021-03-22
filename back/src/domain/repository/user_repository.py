@@ -33,14 +33,14 @@ class UserRepository(SqliteBasedRepository):
 
     def get_log_by_user_id(self, user_id):
         cursor = self._conn().cursor()
-        cursor.execute("SELECT * FROM log where user_id = ?;", (user_id,))
-        result = []
-        added_dates = []
-        for record in cursor.fetchall():
-            date = record["timestamp"][0:10]
-            if date not in added_dates:
-                log = Log(timestamp=record["timestamp"],
-                          user_id=record["user_id"])
-                result.append(log)
-                added_dates.append(date)
-        return result
+        cursor.execute("SELECT * FROM logs WHERE user_id = ?;", (user_id,))
+        return [Log(timestamp=record["timestamp"],
+                    user_id=record["user_id"]) for record in cursor.fetchall()]
+
+    def save_log_entry(self, log_entry):
+        cursor = self._conn().cursor()
+        cursor.execute("INSERT OR REPLACE INTO logs VALUES (:timestamp, :user_id)", {
+            "timestamp": log_entry.timestamp,
+            "user_id": log_entry.user_id
+        })
+        self._conn().commit()
