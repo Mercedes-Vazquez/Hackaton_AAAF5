@@ -16,25 +16,6 @@ class UserInteractor:
             raise NotAuthorizedError({"msg": "Bad username or password"})
         return user
 
-    def register_user(self, data):
-        validate_required_fields(data, ["id", "username", "name", "password"])
-        current_user = self.get_current_user()
-        validate_user_authentication(current_user)
-        validate_admin_role(current_user)
-        new_user = User(data["id"], data["username"],
-                        data["name"], hash_password(data["password"]), is_admin=False)
-        self.user_repository.save_user(new_user)
-
-    def update_user_profile(self, id, data):
-        validate_required_fields(data, ["username", "name", "password"])
-        current_user = self.get_current_user()
-        validate_user_authentication(current_user)
-        validate_admin_role(current_user)
-        self._validate_user(id)
-        user = User(id, data["username"],
-                    data["name"], hash_password(data["password"]), is_admin=False)
-        self.user_repository.save_user(user)
-
     def get_user_by_id(self, id):
         return self.user_repository.get_by_id(id)
 
@@ -83,6 +64,41 @@ class UserInteractor:
         assigned_users = self.user_repository.get_all_assigned_users_by_admin_id(
             current_user.id)
         return assigned_users
+
+    def assign_user(self, data):
+        validate_required_fields(data, ["user_id"])
+        current_user = self.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        self._validate_user(data["user_id"])
+        self.user_repository.assign_user(data["user_id"], current_user.id)
+
+    def unassign_user(self, data):
+        validate_required_fields(data, ["user_id"])
+        current_user = self.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        self._validate_user(data["user_id"])
+        self.user_repository.unassign_user(data["user_id"], current_user.id)
+
+    def register_user(self, data):
+        validate_required_fields(data, ["id", "username", "name", "password"])
+        current_user = self.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        new_user = User(data["id"], data["username"],
+                        data["name"], hash_password(data["password"]), is_admin=False)
+        self.user_repository.save_user(new_user)
+
+    def update_user_profile(self, id, data):
+        validate_required_fields(data, ["username", "name", "password"])
+        current_user = self.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        self._validate_user(id)
+        user = User(id, data["username"],
+                    data["name"], hash_password(data["password"]), is_admin=False)
+        self.user_repository.save_user(user)
 
     def _validate_user(self, user_id):
         user = self.user_repository.get_by_id(user_id)

@@ -54,13 +54,6 @@ class UserRepository(SqliteBasedRepository):
         })
         self._conn().commit()
 
-    def get_all_assigned_users_by_admin_id(self, admin_id):
-        cursor = self._conn().cursor()
-        cursor.execute(
-            "SELECT * FROM admin_users WHERE admin_id = ?;", (admin_id,))
-        assigned_users_ids = [record["user_id"] for record in cursor.fetchall()]
-        return [self.get_by_id(id) for id in assigned_users_ids]
-
     def save_user(self, user):
         cursor = self._conn().cursor()
         cursor.execute("INSERT OR REPLACE INTO users VALUES (:id, :username, :name, :password, :is_admin)", {
@@ -69,5 +62,28 @@ class UserRepository(SqliteBasedRepository):
             "name": user.name,
             "password": user.password,
             "is_admin": 1 if user.is_admin else 0
+        })
+        self._conn().commit()
+
+    def get_all_assigned_users_by_admin_id(self, admin_id):
+        cursor = self._conn().cursor()
+        cursor.execute(
+            "SELECT * FROM admin_users WHERE admin_id = ?;", (admin_id,))
+        assigned_users_ids = [record["user_id"] for record in cursor.fetchall()]
+        return [self.get_by_id(id) for id in assigned_users_ids]
+
+    def assign_user(self, user_id, admin_id):
+        cursor = self._conn().cursor()
+        cursor.execute("INSERT OR REPLACE INTO admin_users VALUES (:admin_id, :user_id)", {
+            "admin_id": admin_id,
+            "user_id": user_id,
+        })
+        self._conn().commit()
+
+    def unassign_user(self, user_id, admin_id):
+        cursor = self._conn().cursor()
+        cursor.execute("DELETE FROM admin_users WHERE user_id=:user_id and admin_id=:admin_id", {
+            "admin_id": admin_id,
+            "user_id": user_id,
         })
         self._conn().commit()

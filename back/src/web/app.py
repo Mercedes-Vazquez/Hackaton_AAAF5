@@ -44,6 +44,20 @@ def user_profile_update_patch(id):
     return "", 200
 
 
+@app.route("/api/users/assign", methods=["POST"])
+def assign_user_post():
+    data = request.get_json()
+    user_interactor.assign_user(data)
+    return "", 200
+
+
+@app.route("/api/users/unassign", methods=["POST"])
+def unassign_user_post():
+    data = request.get_json()
+    user_interactor.unassign_user(data)
+    return "", 200
+
+
 @app.route("/api/goals", methods=["GET"])
 def all_goals_get():
     return json_response(goal_interactor.get_current_users_daily_goals()), 200
