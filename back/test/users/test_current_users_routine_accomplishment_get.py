@@ -11,7 +11,7 @@ def test_should_get_an_empty_list_if_there_is_no_data_and_the_user_is_logged_in(
         get_current_user_id=lambda: "user-1",
     )
     user_interactor = UserInteractor(None, user_repository)
-    log = user_interactor.get_current_users_routine_accomplishment()
+    log = user_interactor.get_current_users_routine_accomplishments()
     assert log == []
 
 
@@ -32,7 +32,7 @@ def test_should_get_a_list_of_unique_days_in_which_the_user_has_logged_in_if_the
         get_current_user_id=lambda: "user-1",
     )
     user_interactor = UserInteractor(None, user_repository)
-    log = user_interactor.get_current_users_routine_accomplishment()
+    log = user_interactor.get_current_users_routine_accomplishments()
     assert len(log) == 3
     assert log[0] == "2021-03-04"
 
@@ -45,7 +45,7 @@ def test_should_get_NotAuthorizedError_if_the_user_is_not_logged_in(database):
     )
     user_interactor = UserInteractor(None, user_repository)
     with pytest.raises(NotAuthorizedError) as exception:
-        user_interactor.get_current_users_routine_accomplishment()
+        user_interactor.get_current_users_routine_accomplishments()
     assert exception.value.data == {
         "msg": "This operation is not authorized. Please, log in."
     }

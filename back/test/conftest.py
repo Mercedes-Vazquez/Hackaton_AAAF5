@@ -20,6 +20,7 @@ def database():
         DROP TABLE IF EXISTS goals;
         CREATE TABLE IF NOT EXISTS goals (
             id varchar,
+            date varchar,
             title varchar,
             category varchar,
             status varchar,

@@ -32,12 +32,12 @@ def auth_login():
 
 @app.route("/api/goals", methods=["GET"])
 def all_goals_get():
-    return json_response(goal_interactor.get_all_goals()), 200
+    return json_response(goal_interactor.get_current_users_daily_goals()), 200
 
 
 @app.route("/api/goals/<id>/tasks", methods=["GET"])
 def all_tasks_by_goal_id_get(id):
-    return json_response(goal_interactor.get_all_goals(id)), 200
+    return json_response(goal_interactor.get_all_tasks_by_goal_id(id)), 200
 
 
 @app.route("/api/frequency", methods=["GET"])
@@ -49,3 +49,8 @@ def routine_accomplishment_get(id):
 def update_log_post(id):
     data = request.get_json()
     return json_response(user_interactor.update_current_user_log(data)), 200
+
+
+@app.route("/api/points", methods=["GET"])
+def points_get(id):
+    return json_response(user_interactor.get_current_users_points()), 200

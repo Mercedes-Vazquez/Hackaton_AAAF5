@@ -4,11 +4,11 @@ from src.domain.model.task import Task
 
 
 class GoalRepository(SqliteBasedRepository):
-    def get_all_goals(self):
+    def get_all_goals_by_user_id(self, user_id):
         cursor = self._conn().cursor()
-        cursor.execute("SELECT * FROM goals;")
+        cursor.execute("SELECT * FROM goals WHERE user_id=?;", (user_id,))
         return [
-            Goal(id=record["id"], title=record["title"],
+            Goal(id=record["id"], date=record["date"], title=record["title"],
                  category=record["category"], status=record["status"],
                  user_id=record["user_id"])
             for record in cursor.fetchall()
@@ -23,4 +23,3 @@ class GoalRepository(SqliteBasedRepository):
                  goal_id=record["goal_id"])
             for record in cursor.fetchall()
         ]
-        return []
