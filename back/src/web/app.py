@@ -54,3 +54,8 @@ def update_log_post(id):
 @app.route("/api/points", methods=["GET"])
 def points_get(id):
     return json_response(user_interactor.get_current_users_points()), 200
+
+
+@app.route("/api/users", methods=["GET"])
+def points_get(id):
+    return json_response(user_interactor.get_all_assigned_users()), 200

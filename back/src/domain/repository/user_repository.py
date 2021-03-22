@@ -24,7 +24,16 @@ class UserRepository(SqliteBasedRepository):
 
     def get_by_username(self, username):
         cursor = self._conn().cursor()
-        cursor.execute("SELECT * FROM users where username = ?;", (username,))
+        cursor.execute("SELECT * FROM users WHERE username = ?;", (username,))
+
+        data = cursor.fetchone()
+
+        if data is not None:
+            return create_user_from_record(data)
+
+    def get_by_id(self, id):
+        cursor = self._conn().cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?;", (id,))
 
         data = cursor.fetchone()
 
@@ -44,3 +53,10 @@ class UserRepository(SqliteBasedRepository):
             "user_id": log_entry.user_id
         })
         self._conn().commit()
+
+    def get_all_assigned_users_by_admin_id(self, admin_id):
+        cursor = self._conn().cursor()
+        cursor.execute(
+            "SELECT * FROM admin_users WHERE admin_id = ?;", (admin_id,))
+        assigned_users_ids = [record["user_id"] for record in cursor.fetchall()]
+        return [self.get_by_id(id) for id in assigned_users_ids]

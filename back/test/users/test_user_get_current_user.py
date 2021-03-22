@@ -15,7 +15,7 @@ def test_current_user_should_return_user_if_logged(database):
     assert user.id == "user-1"
     assert user.username == "user-1@example.com"
     assert user.name == "User 1"
-    assert user.is_admin is True
+    assert user.is_admin is False
 
 
 def test_current_user_should_return_None_if_not_logged(database):

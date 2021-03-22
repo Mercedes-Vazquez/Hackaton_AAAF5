@@ -1,5 +1,6 @@
 from src.domain.repository.goal_repository import GoalRepository
 from src.lib.validations import validate_user_authentication
+from src.lib.errors import NotFoundError
 from datetime import datetime
 
 
@@ -19,6 +20,13 @@ class GoalInteractor:
     def get_all_tasks_by_goal_id(self, goal_id):
         current_user = self.user_repository.get_current_user()
         validate_user_authentication(current_user)
+        self._validate_goal_id(goal_id)
         all_tasks = self.goal_repository.get_all_tasks_by_goal_id(
             goal_id)
         return all_tasks
+
+    def _validate_goal_id(self, goal_id):
+        goal = self.goal_repository.get_goal_by_id(goal_id)
+        if goal is None:
+            errors = {"msg": f"Goal with id '{goal_id}' not found."}
+            raise NotFoundError(errors)

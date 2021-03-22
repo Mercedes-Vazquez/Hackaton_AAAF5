@@ -43,3 +43,9 @@ def validate_user_authentication(user):
     if user is None:
         errors = {"msg": "This operation is not authorized. Please, log in."}
         raise NotAuthorizedError(errors)
+
+
+def validate_admin_role(user):
+    if not user.is_admin:
+        errors = {"msg": "This operation is not authorized."}
+        raise NotAuthorizedError(errors)

@@ -1,5 +1,5 @@
 from src.lib.errors import NotAuthorizedError
-from src.lib.validations import validate_user_authentication, validate_required_fields, validate_iso8601_timestamp
+from src.lib.validations import validate_user_authentication, validate_required_fields, validate_iso8601_timestamp, validate_admin_role
 from src.domain.model.log import Log
 
 
@@ -54,3 +54,11 @@ class UserInteractor:
                 print(all_tasks)
                 completed_tasks += len(all_tasks)
         return completed_tasks
+
+    def get_all_assigned_users(self):
+        current_user = self.user_repository.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        assigned_users = self.user_repository.get_all_assigned_users_by_admin_id(
+            current_user.id)
+        return assigned_users

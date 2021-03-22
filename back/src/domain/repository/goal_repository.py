@@ -23,3 +23,13 @@ class GoalRepository(SqliteBasedRepository):
                  goal_id=record["goal_id"])
             for record in cursor.fetchall()
         ]
+
+    def get_goal_by_id(self, goal_id):
+        cursor = self._conn().cursor()
+        cursor.execute("SELECT * FROM goals WHERE id=?;", (goal_id,))
+        record = cursor.fetchone()
+        if record:
+            return Goal(id=record["id"], date=record["date"], title=record["title"],
+                        category=record["category"], status=record["status"],
+                        user_id=record["user_id"])
+        return None
