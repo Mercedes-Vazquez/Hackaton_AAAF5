@@ -90,14 +90,14 @@ def assigned_users_get(id):
 
 
 @app.route("/api/users/<user_id>/goals/<date>", methods=["GET"])
-def goals_by_date_and_user_id_get(user_id, date):
+def all_goals_by_date_and_user_id_get(user_id, date):
     goals = goal_interactor.get_goals_by_date_and_assigned_user_id(
         date, user_id)
     return json_response(goals), 200
 
 
-@app.route("/api/users/<user_id>/goals/<date>", methods=["PUT"])
-def goals_by_date_and_user_id_get(user_id, date):
+@app.route("/api/users/<user_id>/goals/<goal_id>", methods=["PUT"])
+def goal_by_id_put():
     data = request.get_json()
     goal_interactor.save_assigned_users_goal(data)
     return "", 200

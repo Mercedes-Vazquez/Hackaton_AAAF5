@@ -3,7 +3,7 @@ from src.domain.model.goal import Goal
 from src.lib.validations import \
     validate_required_fields, validate_required_range_of_values, \
     validate_user_authentication, validate_admin_role, validate_date_format
-from src.lib.errors import NotFoundError
+from src.lib.errors import NotFoundError, NotAuthorizedError
 from datetime import datetime
 
 
@@ -24,6 +24,7 @@ class GoalInteractor:
         current_user = self.user_repository.get_current_user()
         validate_user_authentication(current_user)
         self._validate_goal_id(goal_id)
+        self._validate_goal_access(goal_id, current_user)
         all_tasks = self.goal_repository.get_all_tasks_by_goal_id(
             goal_id)
         return all_tasks
@@ -75,5 +76,14 @@ class GoalInteractor:
             admin_id)
         assigned_users_ids = [user.id for user in assigned_users]
         if user_id not in assigned_users_ids:
-            errors = {"msg": f"User with id '{user_id}' not found."}
-            raise NotFoundError(errors)
+            errors = {"msg": "This operation is not authorized."}
+            raise NotAuthorizedError(errors)
+
+    def _validate_goal_access(self, goal_id, current_user):
+        goal = self.goal_repository.get_goal_by_id(goal_id)
+        if not current_user.is_admin:
+            if goal.user_id != current_user.id:
+                errors = {"msg": "This operation is not authorized."}
+                raise NotAuthorizedError(errors)
+        else:
+            self._validate_user_assignment(goal.user_id, current_user.id)

@@ -248,7 +248,7 @@ def test_should_get_NotFoundError_if_the_user_doesnt_exist(database):
     }
 
 
-def test_should_get_NotFoundError_if_the_user_is_not_assigned_to_the_admin(database):
+def test_should_get_NotAuthorizedError_if_the_user_is_not_assigned_to_the_admin(database):
     user_repository = UserRepository(
         None,
         database,
@@ -265,10 +265,10 @@ def test_should_get_NotFoundError_if_the_user_is_not_assigned_to_the_admin(datab
         "status": 1,
         "user_id": "user-1"
     }
-    with pytest.raises(NotFoundError) as exception:
+    with pytest.raises(NotAuthorizedError) as exception:
         goal_interactor.save_assigned_users_goal(data)
     assert exception.value.data == {
-        "msg": "User with id 'user-1' not found."
+        "msg": "This operation is not authorized."
     }
 
 

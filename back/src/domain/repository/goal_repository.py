@@ -48,15 +48,3 @@ class GoalRepository(SqliteBasedRepository):
             "user_id": goal.user_id,
         })
         self._conn().commit()
-
-        # for task in goal.tasks:
-        #     cursor.execute("""
-        #         INSERT OR REPLACE INTO tasks
-        #         VALUES (:id, :date, :title, :category, :status, :user_id)
-        #     """, {
-        #         "id": task.id,
-        #         "title": task.title,
-        #         "description": task.description,
-        #         "hint": task.hint,
-        #         "goal_id": task.goal_id,
-        #     })

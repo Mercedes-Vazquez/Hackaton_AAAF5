@@ -80,7 +80,7 @@ def test_should_get_BadRequestError_if_the_date_isnt_in_iso8601_format(database)
     }
 
 
-def test_should_get_NotFoundError_if_the_user_is_not_assigned_to_the_admin(database):
+def test_should_get_NotAuthorizedError_if_the_user_is_not_assigned_to_the_admin(database):
     user_repository = UserRepository(
         None,
         database,
@@ -89,11 +89,11 @@ def test_should_get_NotFoundError_if_the_user_is_not_assigned_to_the_admin(datab
     goal_repository = GoalRepository(None, database)
     goal_interactor = GoalInteractor(
         None, goal_repository, user_repository, get_current_date=lambda: "2020-03-21")
-    with pytest.raises(NotFoundError) as exception:
+    with pytest.raises(NotAuthorizedError) as exception:
         goal_interactor.get_goals_by_date_and_assigned_user_id(
             "2020-03-21", "user-1")
     assert exception.value.data == {
-        "msg": "User with id 'user-1' not found."
+        "msg": "This operation is not authorized."
     }
 
 
