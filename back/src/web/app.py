@@ -33,3 +33,8 @@ def auth_login():
 @app.route("/api/goals", methods=["GET"])
 def all_goals_get():
     return json_response(goal_interactor.get_all_goals()), 200
+
+
+@app.route("/api/goals/<id>/tasks", methods=["GET"])
+def all_tasks_by_goal_id_get(id):
+    return json_response(goal_interactor.get_all_goals(id)), 200
