@@ -37,6 +37,13 @@ def auth_register():
     return "", 200
 
 
+@app.route("/api/users/<id>", methods=["PATCH"])
+def user_profile_update_patch(id):
+    data = request.get_json()
+    user_interactor.update_user_profile(id, data)
+    return "", 200
+
+
 @app.route("/api/goals", methods=["GET"])
 def all_goals_get():
     return json_response(goal_interactor.get_current_users_daily_goals()), 200

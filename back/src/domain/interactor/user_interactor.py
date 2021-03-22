@@ -1,4 +1,4 @@
-from src.lib.errors import NotAuthorizedError
+from src.lib.errors import NotAuthorizedError, NotFoundError
 from src.lib.validations import validate_user_authentication, validate_required_fields, validate_iso8601_timestamp, validate_admin_role
 from src.domain.model.log import Log
 from src.domain.model.user import User, hash_password
@@ -12,10 +12,8 @@ class UserInteractor:
 
     def auth_user(self, username, password):
         user = self.user_repository.get_by_username(username)
-
         if user is None or not user.check_password(password):
             raise NotAuthorizedError({"msg": "Bad username or password"})
-
         return user
 
     def register_user(self, data):
@@ -25,7 +23,20 @@ class UserInteractor:
         validate_admin_role(current_user)
         new_user = User(data["id"], data["username"],
                         data["name"], hash_password(data["password"]), is_admin=False)
-        self.user_repository.save_user(new_user, current_user)
+        self.user_repository.save_user(new_user)
+
+    def update_user_profile(self, id, data):
+        validate_required_fields(data, ["username", "name", "password"])
+        current_user = self.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        self._validate_user(id)
+        user = User(id, data["username"],
+                    data["name"], hash_password(data["password"]), is_admin=False)
+        self.user_repository.save_user(user)
+
+    def get_user_by_id(self, id):
+        return self.user_repository.get_by_id(id)
 
     def get_current_user(self):
         return self.user_repository.get_current_user()
@@ -72,3 +83,9 @@ class UserInteractor:
         assigned_users = self.user_repository.get_all_assigned_users_by_admin_id(
             current_user.id)
         return assigned_users
+
+    def _validate_user(self, user_id):
+        user = self.user_repository.get_by_id(user_id)
+        if user is None:
+            errors = {"msg": f"User with id '{user_id}' not found."}
+            raise NotFoundError(errors)
