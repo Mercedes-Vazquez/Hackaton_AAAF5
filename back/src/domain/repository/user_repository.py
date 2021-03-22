@@ -70,6 +70,7 @@ class UserRepository(SqliteBasedRepository):
         cursor.execute(
             "SELECT * FROM admin_users WHERE admin_id = ?;", (admin_id,))
         assigned_users_ids = [record["user_id"] for record in cursor.fetchall()]
+        print(assigned_users_ids)
         return [self.get_by_id(id) for id in assigned_users_ids]
 
     def assign_user(self, user_id, admin_id):

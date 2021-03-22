@@ -74,6 +74,12 @@ def goal_by_id_put():
     goal_interactor.save_assigned_users_goal(data)
     return "", 200
 
+# @app.route("/api/goals/<goal_id>", methods=["DELETE"])
+# def goal_by_id_delete():
+#     data = request.get_json()
+#     goal_interactor.delete_assigned_users_goal(data)
+#     return "", 200
+
 
 @app.route("/api/goals/<goal_id>/tasks", methods=["GET"])
 def all_tasks_by_goal_id_get(goal_id):
@@ -108,3 +114,9 @@ def all_goals_by_date_and_user_id_get(user_id, date):
     goals = goal_interactor.get_goals_by_date_and_assigned_user_id(
         date, user_id)
     return json_response(goals), 200
+
+
+@app.route("/api/users/<user_id>/progress", methods=["GET"])
+def progress_by_user_id_get(user_id):
+    progress = goal_interactor.get_progress_by_user_id(user_id)
+    return json_response(progress), 200

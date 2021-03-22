@@ -59,6 +59,7 @@ def database():
             ("user-1", "user-1@example.com", "User 1", '{hash_password("user-1-password")}', 0),
             ("user-2", "user-2@example.com", "User 2", '{hash_password("user-2-password")}', 0),
             ("user-3", "user-3@example.com", "User 3", '{hash_password("user-3-password")}', 0),
+            ("user-4", "user-4@example.com", "User 4", '{hash_password("user-4-password")}', 0),
             ("admin-1", "admin-1@example.com", "Admin 1", '{hash_password("admin-1-password")}', 1);
         """
     )

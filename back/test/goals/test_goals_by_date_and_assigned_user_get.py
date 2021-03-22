@@ -41,7 +41,6 @@ def test_should_get_the_goals_if_there_is_data_and_the_admin_is_logged_in(databa
         ("test-goal-id-2", "2020-03-21", "test-title", "test-category", 1, "user-1"),
         ("test-goal-id-3", "2020-03-22", "test-title", "test-category", 1, "user-1"),
         ("test-goal-id-4", "2020-03-22", "test-title", "test-category", 1, "user-2");
-        
         """
     )
     user_repository = UserRepository(
