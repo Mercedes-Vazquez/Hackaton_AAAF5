@@ -1,0 +1,6 @@
+__pycache__
+.pytest_cache
+data/database.sqlite
+config.py
+.vscode
+!.vscode/tasks.json
