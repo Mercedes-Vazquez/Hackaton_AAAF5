@@ -1,5 +1,8 @@
 from src.domain.repository.goal_repository import GoalRepository
-from src.lib.validations import validate_user_authentication, validate_admin_role, validate_date_format
+from src.domain.model.goal import Goal
+from src.lib.validations import \
+    validate_required_fields, validate_required_range_of_values, \
+    validate_user_authentication, validate_admin_role, validate_date_format
 from src.lib.errors import NotFoundError
 from datetime import datetime
 
@@ -39,6 +42,21 @@ class GoalInteractor:
             if goal.date == date:
                 result.append(goal)
         return result
+
+    def save_assigned_users_goal(self, data):
+        current_user = self.user_repository.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        validate_required_fields(
+            data, ["id", "date", "title", "category", "status", "user_id"])
+        validate_date_format(data["date"])
+        validate_required_range_of_values(
+            {"status": data["status"]}, [0, 1])
+        self._validate_user(data["user_id"])
+        self._validate_user_assignment(data["user_id"], current_user.id)
+        goal = Goal(data["id"], data["date"], data["title"],
+                    data["category"], data["status"], data["user_id"])
+        self.goal_repository.save_assigned_users_goal(goal)
 
     def _validate_goal_id(self, goal_id):
         goal = self.goal_repository.get_goal_by_id(goal_id)

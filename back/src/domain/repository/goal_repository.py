@@ -9,7 +9,7 @@ class GoalRepository(SqliteBasedRepository):
         cursor.execute("SELECT * FROM goals WHERE user_id=?;", (user_id,))
         return [
             Goal(id=record["id"], date=record["date"], title=record["title"],
-                 category=record["category"], status=record["status"],
+                 category=record["category"], status=int(record["status"]),
                  user_id=record["user_id"])
             for record in cursor.fetchall()
         ]
@@ -33,3 +33,30 @@ class GoalRepository(SqliteBasedRepository):
                         category=record["category"], status=record["status"],
                         user_id=record["user_id"])
         return None
+
+    def save_assigned_users_goal(self, goal):
+        cursor = self._conn().cursor()
+        cursor.execute("""
+            INSERT OR REPLACE INTO goals 
+            VALUES (:id, :date, :title, :category, :status, :user_id)
+        """, {
+            "id": goal.id,
+            "date": goal.date,
+            "title": goal.title,
+            "category": goal.category,
+            "status": 1 if goal.status else 0,
+            "user_id": goal.user_id,
+        })
+        self._conn().commit()
+
+        # for task in goal.tasks:
+        #     cursor.execute("""
+        #         INSERT OR REPLACE INTO tasks
+        #         VALUES (:id, :date, :title, :category, :status, :user_id)
+        #     """, {
+        #         "id": task.id,
+        #         "title": task.title,
+        #         "description": task.description,
+        #         "hint": task.hint,
+        #         "goal_id": task.goal_id,
+        #     })
