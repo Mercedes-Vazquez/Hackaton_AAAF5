@@ -40,7 +40,7 @@ const api = {
   async deleteGoal(goal_id) {
     return await this.delete(`/api/goals/${goal_id}`);
   },
-  async getTaskByGoalId(goal_id) {
+  async getTasksByGoalId(goal_id) {
     return await this.get(`/api/goals/${goal_id}/tasks`);
   },
   async saveTask(goal_id, task_id, data) {

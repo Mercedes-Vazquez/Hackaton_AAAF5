@@ -1,16 +1,12 @@
 <template>
   <div>
-    <h1>Cosas que tengo pendientes</h1>
-    <div class="task-list">
-      <div class="task-item" v-for="task in tasks" :key="task.id">
-        <span v-if="task.pending">&#x2610;</span>
-        <span v-else>&#x2611;</span>
-        {{ task.text }}
-      </div>
+    <h2>Tareas diarias</h2>
+    <div v-for="goal in goals" :key="goal.id" @click="onGoalClicked(goal)">
+      <div>{{ goal.date }}</div>
+      <div>{{ goal.title }}</div>
+      <div>{{ goal.category }}</div>
+      <div>{{ goal.status }}</div>
     </div>
-    <hr />
-    <pre>route.params:<br>{{JSON.stringify($route.params, null, 2)}}</pre>
-    <pre>data:<br>{{JSON.stringify($data, null, 2)}}</pre>
   </div>
 </template>
 
@@ -21,16 +17,24 @@ export default {
   name: "Home",
   data() {
     return {
-      tasks: [],
+      routineAccomplishment: [],
+      goals: [],
     };
   },
   methods: {
-    async getTasks() {
-      this.tasks = await api.getTasks();
+    async getRoutineAccomplishment() {
+      this.routineAccomplishment = await api.getRoutineAccomplishment();
+    },
+    async getGoals() {
+      this.goals = await api.getGoals();
+    },
+    async onGoalClicked(goal) {
+      this.$router.push(`/goal/${goal.id}`);
     },
   },
-  created() {
-    this.getTasks();
+  async created() {
+    await this.getRoutineAccomplishment();
+    await this.getGoals();
   },
 };
 </script>

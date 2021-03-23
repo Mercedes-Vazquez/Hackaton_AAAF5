@@ -32,8 +32,9 @@ export default {
   },
   methods: {
     async getTasks() {
-      const goal_id = this.$router.params.goal_id;
-      this.tasks = await api.getTasksByGoalId(goal_id);
+      const id = this.$route.params.id;
+      console.log(id);
+      this.tasks = await api.getTasksByGoalId(id);
     },
     onNextButtonClicked() {
       if (this.current_tasks_index == this.tasks.length - 1) {

@@ -9,15 +9,15 @@ INSERT INTO users VALUES
 
 DELETE FROM goals;
 INSERT INTO goals VALUES 
-    ("test-id-1", "test-date", "test-title", "test-category-1", "test-status", "user-1"),
-    ("test-id-2", "test-date", "test-title", "test-category-1", "test-status", "user-1"),
-    ("test-id-3", "test-date", "test-title", "test-category-2", "test-status", "user-1"),
-    ("test-id-4", "test-date", "test-title", "test-category-2", "test-status", "user-2");
+    ("test-goal-id-1", "2021-03-23", "test-title", "test-category-1", 1, "user-1"),
+    ("test-goal-id-2", "2021-03-23", "test-title", "test-category-1", 0, "user-1"),
+    ("test-goal-id-3", "2021-03-23", "test-title", "test-category-2", 0, "user-1"),
+    ("test-goal-id-4", "2021-03-23", "test-title", "test-category-2", 1, "user-2");
 
 DELETE FROM tasks;
 INSERT INTO tasks VALUES
-    ("test-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
-    ("test-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
+    ("test-task-id-1", "test-title", "test-description", "test-hint", "test-goal-id-1"),
+    ("test-task-id-2", "test-title", "test-description", "test-hint", "test-goal-id-1");
 
 DELETE FROM logs;
 INSERT INTO logs VALUES

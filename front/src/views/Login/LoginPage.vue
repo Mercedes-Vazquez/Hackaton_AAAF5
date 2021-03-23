@@ -26,6 +26,8 @@ export default {
       const ok = await this.$auth.login(loginData);
       if (!ok) {
         alert("invalid username or password");
+      } else {
+        this.$router.push("/home");
       }
     },
   },
