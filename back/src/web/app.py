@@ -100,18 +100,18 @@ def task_by_id_put():
 
 
 @app.route("/api/frequency", methods=["GET"])
-def routine_accomplishment_get(id):
+def routine_accomplishment_get():
     return json_response(user_interactor.get_current_users_routine_accomplishment()), 200
 
 
 @app.route("/api/log/update", methods=["POST"])
-def update_log_post(id):
+def update_log_post():
     data = request.get_json()
     return json_response(user_interactor.update_current_user_log(data)), 200
 
 
 @app.route("/api/points", methods=["GET"])
-def points_get(id):
+def points_get():
     return json_response(user_interactor.get_current_users_points()), 200
 
 

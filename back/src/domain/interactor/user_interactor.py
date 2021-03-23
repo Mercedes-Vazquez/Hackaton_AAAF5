@@ -61,7 +61,7 @@ class UserInteractor:
         log = self.user_repository.get_log_by_user_id(current_user.id)
         return log
 
-    def get_current_users_routine_accomplishments(self):
+    def get_current_users_routine_accomplishment(self):
         log = self.get_current_users_log()
         days_of_use = list(
             set(log_entry.timestamp[0:10] for log_entry in log))
