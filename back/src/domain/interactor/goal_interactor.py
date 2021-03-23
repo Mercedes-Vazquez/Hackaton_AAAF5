@@ -69,6 +69,16 @@ class GoalInteractor:
         self._validate_user_assignment(goal.user_id, current_user.id)
         self.goal_repository.delete_goal_by_id(goal_id)
 
+    def delete_task_by_id(self, task_id):
+        current_user = self.user_repository.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        self._validate_task_id(task_id)
+        task = self.goal_repository.get_task_by_id(task_id)
+        goal = self.goal_repository.get_goal_by_id(task.goal_id)
+        self._validate_user_assignment(goal.user_id, current_user.id)
+        self.goal_repository.delete_task_by_id(task_id)
+
     def save_task(self, data):
         current_user = self.user_repository.get_current_user()
         validate_user_authentication(current_user)
@@ -85,6 +95,12 @@ class GoalInteractor:
         goal = self.goal_repository.get_goal_by_id(goal_id)
         if goal is None:
             errors = {"msg": f"Goal with id '{goal_id}' not found."}
+            raise NotFoundError(errors)
+
+    def _validate_task_id(self, task_id):
+        task = self.goal_repository.get_task_by_id(task_id)
+        if task is None:
+            errors = {"msg": f"Task with id '{task_id}' not found."}
             raise NotFoundError(errors)
 
     def _validate_user(self, user_id):

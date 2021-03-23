@@ -49,6 +49,25 @@ class GoalRepository(SqliteBasedRepository):
         })
         self._conn().commit()
 
+    def delete_goal_by_id(self, goal_id):
+        cursor = self._conn().cursor()
+        cursor.execute("DELETE FROM tasks WHERE goal_id=:goal_id;", {
+            "goal_id": goal_id,
+        })
+        cursor.execute("DELETE FROM goals WHERE id=:goal_id;", {
+            "goal_id": goal_id,
+        })
+        self._conn().commit()
+
+    def get_task_by_id(self, task_id):
+        cursor = self._conn().cursor()
+        cursor.execute("SELECT * FROM tasks WHERE id=?;", (task_id,))
+        record = cursor.fetchone()
+        if record:
+            return Task(id=record["id"], title=record["title"], description=record["description"],
+                        hint=record["hint"], goal_id=record["goal_id"])
+        return None
+
     def save_task(self, task):
         cursor = self._conn().cursor()
         cursor.execute("""
@@ -63,12 +82,9 @@ class GoalRepository(SqliteBasedRepository):
         })
         self._conn().commit()
 
-    def delete_goal_by_id(self, goal_id):
+    def delete_task_by_id(self, task_id):
         cursor = self._conn().cursor()
-        cursor.execute("DELETE FROM tasks WHERE goal_id=:goal_id;", {
-            "goal_id": goal_id,
-        })
-        cursor.execute("DELETE FROM goals WHERE id=:goal_id;", {
-            "goal_id": goal_id,
+        cursor.execute("DELETE FROM tasks WHERE id=:task_id;", {
+            "task_id": task_id,
         })
         self._conn().commit()
