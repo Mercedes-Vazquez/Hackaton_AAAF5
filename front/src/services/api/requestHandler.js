@@ -30,6 +30,10 @@ export default {
     return await this.request("POST", url, data, expectJSON);
   },
 
+  async patch(url, data, expectJSON = false) {
+    return await this.request("PATCH", url, data, expectJSON);
+  },
+
   async put(url, data, expectJSON = false) {
     return await this.request("PUT", url, data, expectJSON);
   },
