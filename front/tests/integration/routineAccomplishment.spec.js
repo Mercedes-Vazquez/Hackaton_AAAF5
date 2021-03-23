@@ -12,6 +12,12 @@ beforeEach(async () => {
         password varchar,
         is_admin boolean
     );
+    DROP TABLE IF EXISTS logs;
+    CREATE TABLE IF NOT EXISTS logs (
+        timestamp varchar,
+        user_id varchar,
+        FOREIGN KEY ("user_id") REFERENCES users("user_id")
+    );
     INSERT INTO users ( id, username, name, password, is_admin) values 
         ("user-1", "user-1@example.com", "User 1", '${sha256(
           "user-1-password"
@@ -25,49 +31,31 @@ beforeEach(async () => {
         ("user-4", "user-4@example.com", "User 4", '${sha256(
           "user-4-password"
         )}', 0);
+    INSERT INTO logs VALUES
+      ("2021-03-04T08:47:19Z", "user-1"),
+      ("2021-03-04T08:50:23Z", "user-1"),
+      ("2021-03-05T08:50:23Z", "user-1"),
+      ("2021-03-06T08:50:23Z", "user-1"),
+      ("2021-03-06T08:50:23Z", "user-2");
   `;
 
   await api.post("/__testing__/sql", sql);
 });
 
-test("login existent user", async () => {
+test("get routine accomplisment when the user is logged in", async () => {
   expect(api.authToken).toBe(null);
   await authStore.login({
     username: "user-1@example.com",
     password: "user-1-password",
   });
-
   expect(api.status).toBe(200);
-  expect(api.authToken).not.toBe(null);
-  expect(authStore.isUserLogged).toBe(true);
-  expect(authStore.user).toEqual({
-    id: "user-1",
-    name: "User 1",
-    username: "user-1@example.com",
-    is_admin: true,
-  });
+  const frequency = await api.getRoutineAccomplishment();
+  expect(frequency.length).toBe(3);
+  expect(frequency[0]).toBe("2021-03-04");
 });
 
-test("login not existent user", async () => {
+test("get routine accomplisment when the user is not logged in", async () => {
   expect(api.authToken).toBe(null);
-  await authStore.login({
-    username: "user-not-exists@example.com",
-    password: "user-1-password",
-  });
+  await api.getRoutineAccomplishment();
   expect(api.status).toBe(401);
-  expect(api.authToken).toBe(null);
-  expect(authStore.user).toEqual({});
-  expect(authStore.isUserLogged).toBe(false);
-});
-
-test("login incorrect password", async () => {
-  expect(api.authToken).toBe(null);
-  await authStore.login({
-    username: "user-1@example.com",
-    password: "user-1-bad-password",
-  });
-  expect(api.status).toBe(401);
-  expect(api.authToken).toBe(null);
-  expect(authStore.user).toEqual({});
-  expect(authStore.isUserLogged).toBe(false);
 });
