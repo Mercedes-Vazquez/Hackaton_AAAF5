@@ -1,14 +1,14 @@
 export const routes = [
   {
     path: "/",
-    component: () => import("@/views/Home/HomePage.vue"),
+    component: () => import("@/views/Login/LoginPage.vue"),
   },
-  {
-    path: "/about",
-    component: () => import("@/views/About/AboutPage.vue"),
-  },
-  {
-    path: "/tasks",
-    component: () => import("@/views/TaskList/TaskListPage.vue"),
-  },
+  // {
+  //   path: "/goal/:id/task",
+  //   component: () => import("@/views/TaskDetails/TaskDetailsPage.vue"),
+  // },
+  // {
+  //   path: "/tasks",
+  //   component: () => import("@/views/TaskList/TaskListPage.vue"),
+  // },
 ];

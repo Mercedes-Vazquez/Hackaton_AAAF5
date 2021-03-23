@@ -10,10 +10,10 @@ from src.domain.repository.user_repository import UserRepository
 app = create_app(config)
 
 goal_repository = GoalRepository(config)
-goal_interactor = GoalInteractor(config, goal_repository)
 user_repository = UserRepository(
     config, get_current_user_id=app.get_current_user_id)
-user_interactor = UserInteractor(config, user_repository)
+goal_interactor = GoalInteractor(config, goal_repository, user_repository)
+user_interactor = UserInteractor(config, user_repository, goal_repository)
 
 
 @app.route("/")

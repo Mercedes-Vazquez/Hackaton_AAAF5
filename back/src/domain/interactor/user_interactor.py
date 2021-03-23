@@ -13,6 +13,7 @@ class UserInteractor:
     def auth_user(self, username, password):
         user = self.user_repository.get_by_username(username)
         if user is None or not user.check_password(password):
+            print(user.password, password, hash_password(password))
             raise NotAuthorizedError({"msg": "Bad username or password"})
         return user
 
