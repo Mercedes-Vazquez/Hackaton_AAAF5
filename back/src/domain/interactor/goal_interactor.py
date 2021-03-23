@@ -45,7 +45,7 @@ class GoalInteractor:
                 result.append(goal)
         return result
 
-    def save_assigned_users_goal(self, data):
+    def save_goal(self, data):
         current_user = self.user_repository.get_current_user()
         validate_user_authentication(current_user)
         validate_admin_role(current_user)
@@ -58,9 +58,18 @@ class GoalInteractor:
         self._validate_user_assignment(data["user_id"], current_user.id)
         goal = Goal(data["id"], data["date"], data["title"],
                     data["category"], data["status"], data["user_id"])
-        self.goal_repository.save_assigned_users_goal(goal)
+        self.goal_repository.save_goal(goal)
 
-    def save_assigned_users_task(self, data):
+    def delete_goal_by_id(self, goal_id):
+        current_user = self.user_repository.get_current_user()
+        validate_user_authentication(current_user)
+        validate_admin_role(current_user)
+        self._validate_goal_id(goal_id)
+        goal = self.goal_repository.get_goal_by_id(goal_id)
+        self._validate_user_assignment(goal.user_id, current_user.id)
+        self.goal_repository.delete_goal_by_id(goal_id)
+
+    def save_task(self, data):
         current_user = self.user_repository.get_current_user()
         validate_user_authentication(current_user)
         validate_admin_role(current_user)
@@ -70,7 +79,7 @@ class GoalInteractor:
         self._validate_goal_access(data["goal_id"], current_user)
         task = Task(data["id"], data["title"], data["description"],
                     data["hint"], data["goal_id"])
-        self.goal_repository.save_assigned_users_task(task)
+        self.goal_repository.save_task(task)
 
     def _validate_goal_id(self, goal_id):
         goal = self.goal_repository.get_goal_by_id(goal_id)

@@ -50,8 +50,10 @@ def test_should_get_the_progress_of_the_user_in_each_goal_category_if_there_is_d
     )
     user_interactor = UserInteractor(None, user_repository, goal_repository)
     progress = user_interactor.get_progress_by_user_id("user-1")
-    assert progress["test-category-1"] == (1, 1)
-    assert progress["test-category-2"] == (1, 2)
+    assert progress["test-category-1"]["completed"] == 1
+    assert progress["test-category-1"]["total"] == 1
+    assert progress["test-category-2"]["completed"] == 1
+    assert progress["test-category-2"]["total"] == 2
 
 
 def test_should_get_NotFoundError_if_the_user_doesnt_exist(database):

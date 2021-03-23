@@ -34,7 +34,7 @@ def test_should_create_the_goal_if_the_goal_doesnt_exist_and_all_data_is_OK_and_
         "hint": "test-hint",
         "goal_id": "test-goal-id-1"
     }
-    goal_interactor.save_assigned_users_task(data)
+    goal_interactor.save_task(data)
     tasks = goal_interactor.get_all_tasks_by_goal_id("test-goal-id-1")
     assert len(tasks) == 1
     assert tasks[0].id == "test-task-id"
@@ -75,7 +75,7 @@ def test_should_update_the_goal_if_the_goal_exists_and_all_data_is_OK_and_the_ad
         "hint": "test-new-hint",
         "goal_id": "test-goal-id-1"
     }
-    goal_interactor.save_assigned_users_task(data)
+    goal_interactor.save_task(data)
     tasks = goal_interactor.get_all_tasks_by_goal_id("test-goal-id-1")
     assert len(tasks) == 1
     assert tasks[0].id == "test-task-id-1"
@@ -96,7 +96,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
 
     all_fields_missing = {}
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_task(all_fields_missing)
+        goal_interactor.save_task(all_fields_missing)
     assert exception.value.data == {
         "id": "REQUIRED",
         "title": "REQUIRED",
@@ -112,7 +112,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "goal_id": "test-goal-id"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_task(id_missing)
+        goal_interactor.save_task(id_missing)
     assert exception.value.data == {
         "id": "REQUIRED",
     }
@@ -124,7 +124,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "goal_id": "test-goal-id"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_task(title_missing)
+        goal_interactor.save_task(title_missing)
     assert exception.value.data == {
         "title": "REQUIRED",
     }
@@ -136,7 +136,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "goal_id": "test-goal-id"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_task(description_missing)
+        goal_interactor.save_task(description_missing)
     assert exception.value.data == {
         "description": "REQUIRED",
     }
@@ -148,7 +148,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "goal_id": "test-goal-id"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_task(hint_missing)
+        goal_interactor.save_task(hint_missing)
     assert exception.value.data == {
         "hint": "REQUIRED",
     }
@@ -160,7 +160,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "hint": "test-hint",
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_task(goal_id_missing)
+        goal_interactor.save_task(goal_id_missing)
     assert exception.value.data == {
         "goal_id": "REQUIRED",
     }
@@ -183,7 +183,7 @@ def test_should_get_NotFoundError_if_the_goal_doesnt_exist(database):
         "goal_id": "goal-doesnt-exist"
     }
     with pytest.raises(NotFoundError) as exception:
-        goal_interactor.save_assigned_users_task(data)
+        goal_interactor.save_task(data)
     assert exception.value.data == {
         "msg": "Goal with id 'goal-doesnt-exist' not found."
     }
@@ -219,7 +219,7 @@ def test_should_get_NotAuthorizedError_if_the_goal_is_not_accessible_by_the_admi
         "goal_id": "test-goal-id-1"
     }
     with pytest.raises(NotAuthorizedError) as exception:
-        goal_interactor.save_assigned_users_task(data)
+        goal_interactor.save_task(data)
     assert exception.value.data == {
         "msg": "This operation is not authorized."
     }
@@ -242,7 +242,7 @@ def test_should_get_NotAuthorizedError_if_the_admin_is_not_logged_in(database):
         "goal_id": "test-goal-id-1"
     }
     with pytest.raises(NotAuthorizedError) as exception:
-        goal_interactor.save_assigned_users_task(data)
+        goal_interactor.save_task(data)
     assert exception.value.data == {
         "msg": "This operation is not authorized. Please, log in."
     }
@@ -265,7 +265,7 @@ def test_should_get_NotAuthorizedError_if_the_user_doesnt_have_an_admin_role(dat
         "goal_id": "test-goal-id-1"
     }
     with pytest.raises(NotAuthorizedError) as exception:
-        goal_interactor.save_assigned_users_task(data)
+        goal_interactor.save_task(data)
     assert exception.value.data == {
         "msg": "This operation is not authorized."
     }

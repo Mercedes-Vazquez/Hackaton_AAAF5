@@ -34,7 +34,7 @@ class GoalRepository(SqliteBasedRepository):
                         user_id=record["user_id"])
         return None
 
-    def save_assigned_users_goal(self, goal):
+    def save_goal(self, goal):
         cursor = self._conn().cursor()
         cursor.execute("""
             INSERT OR REPLACE INTO goals 
@@ -49,7 +49,7 @@ class GoalRepository(SqliteBasedRepository):
         })
         self._conn().commit()
 
-    def save_assigned_users_task(self, task):
+    def save_task(self, task):
         cursor = self._conn().cursor()
         cursor.execute("""
             INSERT OR REPLACE INTO tasks 
@@ -60,5 +60,15 @@ class GoalRepository(SqliteBasedRepository):
             "description": task.description,
             "hint": task.hint,
             "goal_id": task.goal_id,
+        })
+        self._conn().commit()
+
+    def delete_goal_by_id(self, goal_id):
+        cursor = self._conn().cursor()
+        cursor.execute("DELETE FROM tasks WHERE goal_id=:goal_id;", {
+            "goal_id": goal_id,
+        })
+        cursor.execute("DELETE FROM goals WHERE id=:goal_id;", {
+            "goal_id": goal_id,
         })
         self._conn().commit()

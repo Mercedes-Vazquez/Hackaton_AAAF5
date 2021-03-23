@@ -24,7 +24,7 @@ def test_should_create_the_goal_if_the_goal_doesnt_exist_and_all_data_is_OK_and_
         "status": 0,
         "user_id": "user-1"
     }
-    goal_interactor.save_assigned_users_goal(data)
+    goal_interactor.save_goal(data)
     goals = goal_interactor.get_goals_by_date_and_assigned_user_id(
         "2020-03-15", "user-1")
     assert len(goals) == 1
@@ -64,7 +64,7 @@ def test_should_update_the_goal_if_the_goal_exists_and_all_data_is_OK_and_the_ad
         "status": 0,
         "user_id": "user-1"
     }
-    goal_interactor.save_assigned_users_goal(data)
+    goal_interactor.save_goal(data)
     goals = goal_interactor.get_goals_by_date_and_assigned_user_id(
         "2020-03-18", "user-1")
     assert len(goals) == 1
@@ -87,7 +87,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
 
     all_fields_missing = {}
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(all_fields_missing)
+        goal_interactor.save_goal(all_fields_missing)
     assert exception.value.data == {
         "id": "REQUIRED",
         "date": "REQUIRED",
@@ -105,7 +105,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(id_missing)
+        goal_interactor.save_goal(id_missing)
     assert exception.value.data == {
         "id": "REQUIRED",
     }
@@ -118,7 +118,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(date_missing)
+        goal_interactor.save_goal(date_missing)
     assert exception.value.data == {
         "date": "REQUIRED",
     }
@@ -131,7 +131,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(title_missing)
+        goal_interactor.save_goal(title_missing)
     assert exception.value.data == {
         "title": "REQUIRED",
     }
@@ -144,7 +144,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(category_missing)
+        goal_interactor.save_goal(category_missing)
     assert exception.value.data == {
         "category": "REQUIRED",
     }
@@ -157,7 +157,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(status_missing)
+        goal_interactor.save_goal(status_missing)
     assert exception.value.data == {
         "status": "REQUIRED",
     }
@@ -170,7 +170,7 @@ def test_should_raise_BadRequestError_if_there_are_not_the_required_fields_in_th
         "status": 1
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(user_id_missing)
+        goal_interactor.save_goal(user_id_missing)
     assert exception.value.data == {
         "user_id": "REQUIRED",
     }
@@ -194,7 +194,7 @@ def test_should_get_BadRequestError_if_the_date_isnt_in_iso8601_format(database)
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(data)
+        goal_interactor.save_goal(data)
     assert exception.value.data == {
         "date": "BAD FORMAT"
     }
@@ -218,7 +218,7 @@ def test_should_get_BadRequestError_if_the_goal_status_isnt_zero_or_one(database
         "user_id": "user-1"
     }
     with pytest.raises(BadRequestError) as exception:
-        goal_interactor.save_assigned_users_goal(data)
+        goal_interactor.save_goal(data)
     assert exception.value.data == {
         "status": "BAD VALUE"
     }
@@ -242,7 +242,7 @@ def test_should_get_NotFoundError_if_the_user_doesnt_exist(database):
         "user_id": "user-doesnt-exist"
     }
     with pytest.raises(NotFoundError) as exception:
-        goal_interactor.save_assigned_users_goal(data)
+        goal_interactor.save_goal(data)
     assert exception.value.data == {
         "msg": "User with id 'user-doesnt-exist' not found."
     }
@@ -266,7 +266,7 @@ def test_should_get_NotAuthorizedError_if_the_user_is_not_assigned_to_the_admin(
         "user_id": "user-1"
     }
     with pytest.raises(NotAuthorizedError) as exception:
-        goal_interactor.save_assigned_users_goal(data)
+        goal_interactor.save_goal(data)
     assert exception.value.data == {
         "msg": "This operation is not authorized."
     }
@@ -290,7 +290,7 @@ def test_should_get_NotAuthorizedError_if_the_admin_is_not_logged_in(database):
         "user_id": "user-1"
     }
     with pytest.raises(NotAuthorizedError) as exception:
-        goal_interactor.save_assigned_users_goal(data)
+        goal_interactor.save_goal(data)
     assert exception.value.data == {
         "msg": "This operation is not authorized. Please, log in."
     }
@@ -314,7 +314,7 @@ def test_should_get_NotAuthorizedError_if_the_user_doesnt_have_an_admin_role(dat
         "user_id": "user-1"
     }
     with pytest.raises(NotAuthorizedError) as exception:
-        goal_interactor.save_assigned_users_goal(data)
+        goal_interactor.save_goal(data)
     assert exception.value.data == {
         "msg": "This operation is not authorized."
     }

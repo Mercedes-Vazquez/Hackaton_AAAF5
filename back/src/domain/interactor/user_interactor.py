@@ -113,7 +113,8 @@ class UserInteractor:
                 goal.category, (0, 0))
             progress_by_category[goal.category] = (
                 current_value[0] + goal.status, current_value[1] + 1)
-        return progress_by_category
+        return {key: {"completed": value[0], "total": value[1]}
+                for key, value in progress_by_category.items()}
 
     def _validate_user(self, user_id):
         user = self.user_repository.get_by_id(user_id)
